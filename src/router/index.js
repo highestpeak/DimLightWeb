@@ -10,6 +10,20 @@ const routes = [
     name: 'Home',
     component: Home
   },
+  { path: '/feed/list', name: 'feed-list', component: () => import('../views/feed/list.vue'), },
+  { path: '/feed/new', name: 'feed-new', component: () => import('../views/feed/new.vue'), },
+  { path: '/feed/edit', name: 'feed-edit', component: () => import('../components/FeedNew/NewFeedInputForm.vue'), },
+  { path: '/feed/topic', name: 'feed-topic', component: () => import('../views/feed/topic.vue'), },
+  { path: '/feed/diagram', name: 'feed-diagram', component: () => import('../views/feed/diagram.vue'), },
+  {
+    path: '/task',
+    name: 'Task',
+    component: () => import('../views/Task.vue'),
+  },
+  { path: '/task/list', name: "task-list", component: () => import('../views/task/list.vue') },
+  { path: '/task/new', name: "task-new", component: () => import('../views/task/new.vue') },
+  { path: '/task/scenario', name: "task-scenario", component: () => import('../views/task/scenario.vue') },
+  { path: '/task/diagram', name: "task-diagram", component: () => import('../views/task/diagram.vue') },
   {
     path: '/about',
     name: 'About',
