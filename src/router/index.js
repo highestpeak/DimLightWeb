@@ -38,6 +38,12 @@ const routes = [
   }
 ]
 
+if (process.env.NODE_ENV !== 'production') {
+  routes.push(
+    { path: '/test', name: "test", component: () => import('../views/TestPage.vue') }
+  );
+}
+
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,

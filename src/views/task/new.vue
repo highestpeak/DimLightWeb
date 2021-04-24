@@ -2,6 +2,13 @@
   <div>
     <h2 style="margin: 10px 0px">New Task</h2>
     <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+      <ViewGroup
+        :iconOption="false"
+        :viewOptions="viewGroup"
+        @change-view="changeNewFeedView"
+        style="margin: 10px 0px"
+      >
+      </ViewGroup>
       <blockquote class="blockquote-statement">task 的通用的参数</blockquote>
       <b-button-group style="margin:10px auto;">
         <b-button squared variant="dark" disabled>快捷输入</b-button>
@@ -15,13 +22,6 @@
         <blockquote class="blockquote-statement">
           task 的各自需要的参数
         </blockquote>
-        <ViewGroup
-          :iconOption="false"
-          :viewOptions="viewGroup"
-          @change-view="changeNewFeedView"
-          style="margin: 10px 0px"
-        >
-        </ViewGroup>
 
         <SimpleRSSWatchTask v-if="currViewIndex === 0" v-on:taskValueChange="onOptionalTaskValueChange"/>
 
@@ -61,8 +61,10 @@ export default {
       },
       viewGroup: [
         { index: 0, state: true, text: "Simple Watching Task" }, // 一个  task 的最基本参数
-        { index: 1, state: false, text: "Algorithm Task" },
-        { index: 2, state: false, text: "Regx Task" },
+        // 历史数据爬虫，一次性爬完，定时提供一些内容
+        { index: 1, state: false, text: "History Crawl Task" }, 
+        // 主题聚合时间: 写一个界面，拖动不同的
+        { index: 2, state: false, text: "Topic Aggregation Task" },
         { index: 3, state: false, text: "Filter Task" },
         { index: 4, state: false, text: "Tag Task" },
         { index: 5, state: false, text: "Python Task" },

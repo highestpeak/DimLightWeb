@@ -96,6 +96,7 @@ export default {
         },
         // { to: "/task", text: "Task", active: false },
         { to: "/event", text: "Events", active: false },
+        { to: "/test", text: "Test", active: false },
         // { to: "/readable", text: "Readable", active: false },
       ],
       currActiveMenuItem: null,

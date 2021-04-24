@@ -62,7 +62,7 @@ export default {
     onSubmit(event) {
       event.preventDefault();
       var vueApp = this
-      rssJsonAdd(this.json, function (variant = null) {
+      rssJsonAdd(this.form, function (variant = null) {
         vueApp.toast("Toast body content", {
           title: `Variant ${variant || "default"}`,
           variant: variant,
