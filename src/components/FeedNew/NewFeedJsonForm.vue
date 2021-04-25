@@ -43,7 +43,7 @@
 
 <script>
 import JSONEditor from "@/components/JsonEditor";
-import { rssJsonAdd } from "@/util/request";
+import { rssJsonAdd } from "@/util/request/rssRequest";
 export default {
   name: "NewFeedJsonForm",
   components: {

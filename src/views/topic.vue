@@ -2,7 +2,7 @@
   <div>
     <div style="margin: 20px"></div>
     <blockquote style="border-left: 5px solid #e84545; padding: 10px 20px;background-color:#fed049">
-      一个 Topic 可以包含多个 Feed,一个 Feed 可以包含多个 Topic, Topic 用来帮助分组并且组织信息
+      Topic是聚合系统的聚合信息单元，一个Topic包含多个信息源，他们产生的信息可能相同，但是Topic会通过聚合方式去重
     </blockquote>
     <!-- button group -->
     <b-button-group style="margin: 10px 0px" size="sm">
@@ -17,51 +17,57 @@
     </b-button-group>
     <!-- button group -->
     <hr />
+
     <!-- filter -->
     <b-form-group
-      label="Filter"
-      label-for="filter-input"
+      label="Search"
+      label-for="search-input"
       label-cols-sm="3"
       label-align-sm="right"
       label-size="sm"
     >
       <b-input-group size="sm">
         <b-form-input
-          id="filter-input"
-          v-model="filter"
+          id="search-input"
+          v-model="search"
           type="search"
           placeholder="Type to Search"
         />
-        <b-input-group-append>
-          <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
-        </b-input-group-append>
       </b-input-group>
     </b-form-group>
+    <!-- filter -->
+
+    <!--per page-->
     <b-form-group
-      label="Filter On"
-      description="Leave all unchecked to filter on all data"
-      label-cols-sm="3"
+      label="Per page"
+      label-for="per-page-select"
+      label-cols-sm="6"
+      label-cols-md="4"
+      label-cols-lg="3"
       label-align-sm="right"
       label-size="sm"
     >
-      <b-form-checkbox-group v-model="filterCols" class="mt-1">
-        <b-form-checkbox
-          v-for="(field, index) in fields"
-          :key="index"
-          :value="field.key"
-        >
-          {{ field.key }}
-        </b-form-checkbox>
-      </b-form-checkbox-group>
+      <b-form-select
+        id="per-page-select"
+        v-model="perPage"
+        :options="pageOptions"
+        size="sm"
+      ></b-form-select>
     </b-form-group>
-    <!-- filter -->
+
+    <!--per page-->
+    <b-pagination
+      v-if="totalRows!=0"
+      v-model="currentPage"
+      :total-rows="totalRows"
+      :per-page="perPage"
+      align="right"
+      size="sm"
+    ></b-pagination>
 
     <b-table
       responsive
       small
-      :filter="filter"
-      :filter-included-fields="filterCols"
-      @filtered="onFiltered"
       :busy="isBusy"
       :items="items"
       :fields="fields"
@@ -98,6 +104,15 @@
         <i>{{ data.value }}</i>
       </template>
     </b-table>
+
+    <b-pagination
+      v-if="totalRows!=0"
+      v-model="currentPage"
+      :total-rows="totalRows"
+      :per-page="perPage"
+      align="right"
+      size="sm"
+    ></b-pagination>
 
     <b-modal ref="new-topic-modal" hide-footer title="创建Topic">
       <div class="d-block text-center">
@@ -151,24 +166,46 @@
 </template>
 
 <script>
-import {newTopic, updateTopic, delTopic, getTopic} from "@/util/request";
+import {newTopic, updateTopic, delTopic, getTopic, topicSearchContent} from "@/util/request/topicRequest";
 export default {
   name: "feed-topic",
   data() {
     return {
-      filter: null,
-      // filterCols 中的值是 fields 的 key
-      filterCols: [],
+      search: "",
+      pageOptions: [5, 20, 50, { value: 100, text: "Show a lot" }],
+      perPage: 20,
+      currentPage: 1,
+      totalRows: 0,
       isBusy: false,
       items: [],
       newTopicForm: {name:"",desc:""},
       editTopicForm: {id:-1,name:"",desc:""}
     };
   },
-  computed:{
-    totalRows: function(){
-      return this.items.length
+  watch: {
+    perPage: function(newPerPage) {
+      this.currentPage = 1
+      this.isBusy = true
+      getTopic(0,newPerPage,this.onTopicsListFetchSucceed);
     },
+    currentPage: function(nextPage) {
+      this.isBusy = true  
+      getTopic(nextPage-1,this.perPage,this.onTopicsListFetchSucceed);
+    },
+    search: function(newSearchContent) {
+      if (newSearchContent==="") {
+        return;
+      }
+      // 实现input连续输入，只发一次请求
+      clearTimeout(this.timeout);
+      var vueApp = this
+      this.timeout = setTimeout(() => {
+        // console.log(newSearchContent);
+        topicSearchContent(newSearchContent, vueApp.onTopicsListFetchSucceed);
+      }, 300);
+    }
+  },
+  computed:{
     fields: function(){
       if(this.totalRows<=0){
         return []
@@ -190,7 +227,8 @@ export default {
     }
   },
   mounted(){
-    this.getTopicsList()
+    this.isBusy = true
+    getTopic(this.currentPage-1, this.perPage, this.onTopicsListFetchSucceed)
   },
   methods: {
     onFiltered(filteredItems) {
@@ -209,16 +247,12 @@ export default {
         vueApp.$forceUpdate();
       })
     },
-    getTopicsList(){
-      this.isBusy = true
-      getTopic(null, this.onTopicsListFetchSucceed)
-    },
     delTopic(row){
       var rowItem = row.item
       var rowIndex = row.index
       var vueApp = this
       delTopic({ name: rowItem.name, id: rowItem.id}, function (responseData) {
-        if(responseData.messages.length == 0){
+        if(responseData.errorMsg.length === 0){
           vueApp.items.splice(rowIndex, 1);
         }else{
           // 发生错误
@@ -242,6 +276,7 @@ export default {
       })
     },
     onTopicsListFetchSucceed(responseData){
+      this.totalRows = responseData.totalElements
       // console.log(responseData)
       var topicList = responseData.content
       topicList.forEach(function(obj) {
@@ -274,6 +309,9 @@ export default {
       // We pass the ID of the button that we want to return focus to
       // when the modal has hidden
       this.$refs['edit-topic-modal'].toggle('#toggle-btn')
+    },
+    infoRow(data) {
+      console.log("info row not impl");
     }
   },
 };

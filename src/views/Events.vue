@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import { getEventsList,clearEvents } from "@/util/request";
+import { getEventsList,clearEvents } from "@/util/request/eventRequest";
 export default {
   name: "Events",
   data(){

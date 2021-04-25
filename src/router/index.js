@@ -14,7 +14,7 @@ const routes = [
   { path: '/feed/info', name: 'feed-info', component: () => import('../views/feed/info.vue'), },
   { path: '/feed/new', name: 'feed-new', component: () => import('../views/feed/new.vue'), },
   { path: '/feed/edit', name: 'feed-edit', component: () => import('../components/FeedNew/NewFeedInputForm.vue'), },
-  { path: '/feed/topic', name: 'feed-topic', component: () => import('../views/feed/topic.vue'), },
+  { path: '/feed/topic', name: 'feed-topic', component: () => import('../views/topic.vue'), },
   { path: '/feed/tag', name: 'feed-tag', component: () => import('../views/feed/tag.vue'), },
   { path: '/feed/diagram', name: 'feed-diagram', component: () => import('../views/feed/diagram.vue'), },
   {

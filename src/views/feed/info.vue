@@ -9,8 +9,7 @@
              @click="activeIndex=index">
               <font-awesome-icon
                 :icon="['fas', nav.icon]"
-                size="lg"
-                style="color: #194350"
+                style="color: #194350;width:20px;height:20px;"
               />
               {{nav.name}}
             </b-nav-item>
@@ -29,6 +28,9 @@
           <template v-if="activeIndex===3">
             <SummaryGraph />
           </template>
+          <template v-if="activeIndex===4">
+            <FeedItemPreview :rss=rss />
+          </template>
         </b-col>
       </b-row>
     </b-container>
@@ -39,12 +41,14 @@
 import FeedDetail from "@/components/FeedInfo/FeedDetail";
 import TaskFlow from "@/components/FeedInfo/TaskFlow";
 import SummaryGraph from "@/components/FeedInfo/SummaryGraph";
+import FeedItemPreview from "@/components/FeedInfo/FeedItemPreview";
 export default {
   name: "feed-info",
   components:{
     FeedDetail,
     TaskFlow,
-    SummaryGraph
+    SummaryGraph,
+    FeedItemPreview
   },
   data() {
     return {
@@ -53,7 +57,7 @@ export default {
         { name: "Detail", icon: "info-circle" },
         { name: "Task Flow", icon: "water" },
         { name: "Summary", icon: "chart-line" },
-        { name: "Logs", icon: "file-alt" },
+        { name: "ItemsPreview", icon: "list" },
         { name: "Events", icon: "random" },
         { name: "Actions", icon: "align-center" },
       ],
@@ -94,6 +98,9 @@ export default {
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
   background-color: #428bca !important;
+}
+.menu-nav *{
+  color:#333333;
 }
 .menu-nav:hover{
   background: #EEEEEE;

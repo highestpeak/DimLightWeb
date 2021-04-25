@@ -79,11 +79,11 @@ export default {
           subMenu: [
             { to: "/feed/list", text: "Feeds", active: true },
             { to: "/feed/new", text: "New Feed", active: false },
-            { to: "/feed/topic", text: "Topic", active: false },
             { to: "/feed/tag", text: "Tag", active: false },
             // { to: "/feed/diagram", text: "View Diagram", active: false },
           ],
         },
+        { to: "/feed/topic", text: "Topic", active: false },
         {
           text: "Task",
           active: false,

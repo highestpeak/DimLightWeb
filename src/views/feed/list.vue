@@ -33,40 +33,20 @@
 
     <!-- filter -->
     <b-form-group
-      label="Filter"
-      label-for="filter-input"
+      label="Search"
+      label-for="search-input"
       label-cols-sm="3"
       label-align-sm="right"
       label-size="sm"
     >
       <b-input-group size="sm">
         <b-form-input
-          id="filter-input"
-          v-model="filter"
+          id="search-input"
+          v-model="search"
           type="search"
           placeholder="Type to Search"
         />
-        <b-input-group-append>
-          <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
-        </b-input-group-append>
       </b-input-group>
-    </b-form-group>
-    <b-form-group
-      label="Filter On"
-      description="Leave all unchecked to filter on all data. Start-task used true and false to filter"
-      label-cols-sm="3"
-      label-align-sm="right"
-      label-size="sm"
-    >
-      <b-form-checkbox-group v-model="filterCols" class="mt-1">
-        <b-form-checkbox
-          v-for="(field, index) in fieldsCanFilter"
-          :key="index"
-          :value="field"
-        >
-          {{ field }}
-        </b-form-checkbox>
-      </b-form-checkbox-group>
     </b-form-group>
     <!-- filter -->
 
@@ -102,14 +82,9 @@
       hover
       responsive
       small
-      :filter="filter"
-      :filter-included-fields="filterCols"
-      @filtered="onFiltered"
       :busy="isBusy"
       :items="items"
       :fields="fields"
-      :current-page="currentPage"
-      :per-page="perPage"
       style="margin-bottom: 50px"
     >
       <template #table-busy>
@@ -201,17 +176,16 @@
 </template>
 
 <script>
-import { getFeedList, delRSSSource, rssJsonExport, rssOpmlExport } from "@/util/request";
+import { getFeedList, delRSSSource, rssJsonExport, rssOpmlExport, rssSearchContent } from "@/util/request/rssRequest";
 export default {
   name: "feed-list",
   data() {
     return {
-      filter: null,
-      // filterCols 中的值是 fields 的 key
-      filterCols: [],
+      search: "",
       pageOptions: [5, 20, 50, { value: 100, text: "Show a lot" }],
       perPage: 20,
       currentPage: 1,
+      totalRows: 0,
       // table
       isBusy: false,
       fields: [
@@ -227,7 +201,6 @@ export default {
         { key: "fetchAble", sortable: false , tdClass: 'fetchabletb'},
         { key: "operate", sortable: false },
       ],
-      fieldsCanFilter: ["titleParse", "titleUser", "generator", "tags", "fetchAble"],
       badgeVariantArray: [
         "primary",
         "secondary",
@@ -240,33 +213,53 @@ export default {
       ],
       items: [
       ],
+      timeout: null,
     };
   },
-  computed:{
-    totalRows: function(){
-      return this.items.length
+  watch: {
+    perPage: function(newPerPage) {
+      this.currentPage = 1
+      this.isBusy = true
+      getFeedList(0,newPerPage,this.onFeedListFetchSucceed);
+    },
+    currentPage: function(nextPage) {
+      this.isBusy = true  
+      getFeedList(nextPage-1,this.perPage,this.onFeedListFetchSucceed);
+    },
+    search: function(newSearchContent) {
+      if (newSearchContent==="") {
+        return;
+      }
+      // 实现input连续输入，只发一次请求
+      clearTimeout(this.timeout);
+      var vueApp = this
+      this.timeout = setTimeout(() => {
+        // console.log(newSearchContent);
+        rssSearchContent(newSearchContent, vueApp.onFeedListFetchSucceed);
+      }, 300);
     }
+  },
+  computed:{
   },
   mounted() {
     this.isBusy = true
-    getFeedList(this.onFeedListFetchSucceed);
+    getFeedList(this.currentPage-1,this.perPage,this.onFeedListFetchSucceed);
   },
   methods: {
-    onFiltered(filteredItems) {
-      // Trigger pagination to update the number of buttons/pages due to filtering
-      this.currentPage = 1;
-    },
     onFeedListFetchSucceed(responseData){
+      this.totalRows = responseData.totalElements
+      // console.log(this.totalRows);
       var feedList = responseData.content
       // console.log(feedList);
       feedList.forEach(function(obj) {
-        obj.tags = obj.rssSourceTags.map(a => a.name) ;
-        delete obj.rssSourceTags;
-        obj.topics = obj.rssTopics.map(a => a.name) ;
-        delete obj.rssTopics;
+        obj.tags = obj.mobiusTags.map(a => a.name) ;
+        delete obj.mobiusTags;
+        obj.topics = obj.rssMobiusTopics.map(a => a.name) ;
+        delete obj.rssMobiusTopics;
       });
-      this.isBusy = false
+      // console.log(feedList);
       this.items = feedList
+      this.isBusy = false
       // console.log(this.totalRows)
     },
     editRssSource(row){

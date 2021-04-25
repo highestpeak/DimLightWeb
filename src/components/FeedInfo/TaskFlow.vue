@@ -1,5 +1,9 @@
 <template>
   <div>
+    <p>
+      <b>jsonOptionalExtraFields:</b>
+      <pre class="json-code-show">{{jsonOptionalExtraFields}}</pre>
+    </p>
     <img src="@/assets/sample.svg" alt="" style="margin-top:100px">
   </div>
 </template>

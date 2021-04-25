@@ -2,6 +2,7 @@
   <div>
     <h3>每日Feed获取量变化</h3>
     <div id="oneFlightWeek" style="width:700px;height:200px;"></div>
+    统计平均内容长度，内容新鲜度，内容在所有feed的热度，内容数量，内容频率
   </div>
 </template>
 

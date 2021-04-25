@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { rssOPMLAdd } from "@/util/request";
+import { rssOPMLAdd } from "@/util/request/rssRequest";
 export default {
   name: "NewFeedOPMLForm",
   data(){

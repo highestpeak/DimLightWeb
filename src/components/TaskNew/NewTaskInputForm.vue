@@ -57,7 +57,7 @@
 <script>
 import { 
   getTaskOutputCacheCycle
-} from "@/util/request";
+} from "@/util/request/commonRequest";
 export default {
   name: "NewTaskInputForm",
   data() {

@@ -1,8 +1,8 @@
 <template>
-  <b-container fluid style="margin:20px 0px">
-    <b-row>
-      <b-col sm="6">
-        <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+  <b-container fluid style="margin: 20px 0px">
+    <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+      <b-row>
+        <b-col sm="6">
           <!-- todo: 如此多的 form group 写一个数据格式，来用循环搞定 -->
           <b-form-group label="RSS Source Feed Url:">
             <b-form-input
@@ -153,10 +153,7 @@
             </b-row>
           </b-form-group>
 
-          <b-form-group
-            label="tags:"
-            description="Enter a tag and press enter"
-          >
+          <b-form-group label="tags:" description="Enter a tag and press enter">
             <b-form-tags
               v-model="form.tags"
               placeholder="Enter the tag of this service"
@@ -196,31 +193,34 @@
             v-if="form.createTask"
             v-on:taskValueChange="onTaskValueChange"
           />
+        </b-col>
+        <b-col sm="6">
+          <b-card class="mt-3" header="Form Data Result">
+            <pre class="m-0">{{ form }}</pre>
+            <!-- <pre class="m-0" v-if="taskForm.createTask">{{ taskForm }}</pre> -->
+          </b-card>
+          <FeedJsonTutorialCard />
+        </b-col>
+      </b-row>
 
-          <b-button type="reset" variant="danger">Reset</b-button>
-          &nbsp;
-          <b-button type="submit" variant="primary">Submit</b-button>
-        </b-form>
-      </b-col>
-      <b-col sm="6">
-        <b-card class="mt-3" header="Form Data Result">
-          <pre class="m-0">{{ form }}</pre>
-          <!-- <pre class="m-0" v-if="taskForm.createTask">{{ taskForm }}</pre> -->
-        </b-card>
-      </b-col>
-    </b-row>
+      <b-button type="reset" variant="danger">Reset</b-button>
+      &nbsp;
+      <b-button type="submit" variant="primary">Submit</b-button>
+    </b-form>
   </b-container>
 </template>
 
 <script>
 import JSONEditor from "@/components/JsonEditor";
 import NewTaskInputForm from "@/components/TaskNew/NewTaskInputForm";
-import { newRSSSource, updateRSSSource } from "@/util/request";
+import FeedJsonTutorialCard from "@/components/FeedNew/FeedJsonTutorialCard";
+import { newRSSSource, updateRSSSource } from "@/util/request/rssRequest";
 export default {
   name: "NewFeedInputForm",
   components: {
     JSONEditor,
     NewTaskInputForm,
+    FeedJsonTutorialCard,
   },
   data() {
     return {
@@ -234,7 +234,7 @@ export default {
         topics: [],
         jsonOptionalExtraFields: {},
         createTask: false,
-        link:"",
+        link: "",
         taskForm: {
           startTask: false,
           title: "",
@@ -273,29 +273,29 @@ export default {
       show: true,
       hasParse: false,
       titleParse: "",
-      descParse: ""
+      descParse: "",
     };
   },
   mounted() {
-    if(this.$route.name==="feed-edit"){
+    if (this.$route.name === "feed-edit") {
       // console.log("feed-edit")
-      var rssSource = this.$route.params.rssSource
+      var rssSource = this.$route.params.rssSource;
       // console.log(rssSource);
-      var form = this.form
-      form.url = rssSource.url
-      form.title = rssSource.titleUser
-      form.generator = rssSource.generator
-      form.image = rssSource.image
-      form.link = rssSource.link
-      form.desc = rssSource.descUser
-      form.tags = rssSource.tags
-      form.topics = rssSource.topics
-      form.jsonOptionalExtraFields = rssSource.jsonOptionalExtraFields
+      var form = this.form;
+      form.url = rssSource.url;
+      form.title = rssSource.titleUser;
+      form.generator = rssSource.generator;
+      form.image = rssSource.image;
+      form.link = rssSource.link;
+      form.desc = rssSource.descUser;
+      form.tags = rssSource.tags;
+      form.topics = rssSource.topics;
+      form.jsonOptionalExtraFields = rssSource.jsonOptionalExtraFields;
 
-      this.imageOption= "url"
-      this.hasParse = true
-      this.titleParse = rssSource.titleParse
-      this.descParse = rssSource.descParse
+      this.imageOption = "url";
+      this.hasParse = true;
+      this.titleParse = rssSource.titleParse;
+      this.descParse = rssSource.descParse;
       delete form.taskForm;
     }
   },
@@ -309,7 +309,7 @@ export default {
       }
       var prefixEndIndex = this.form.image.indexOf("-");
       var inputEndIndex = this.form.image.indexOf(";");
-      if (inputEndIndex===-1) {
+      if (inputEndIndex === -1) {
         return {
           prefix: "fas",
           value: "user",
@@ -317,7 +317,7 @@ export default {
       }
       return {
         prefix: this.form.image.substring(0, prefixEndIndex),
-        value: this.form.image.substring(prefixEndIndex + 1,inputEndIndex),
+        value: this.form.image.substring(prefixEndIndex + 1, inputEndIndex),
       };
     },
   },
@@ -325,10 +325,10 @@ export default {
     onSubmit(event) {
       event.preventDefault();
       // alert(JSON.stringify(this.form));
-      if(this.$route.name!=="feed-edit"){
+      if (this.$route.name !== "feed-edit") {
         newRSSSource(this.form, this.succeedCallback);
-      }else{
-        updateRSSSource(this.form, this.succeedCallback)
+      } else {
+        updateRSSSource(this.form, this.succeedCallback);
       }
     },
     onReset(event) {
@@ -348,14 +348,14 @@ export default {
         this.show = true;
       });
     },
-    succeedCallback(responseData){
-      var msg = responseData.messages
+    succeedCallback(responseData) {
+      var msg = responseData.messages;
       // console.log(msg);
-      this.$bvToast.toast('succeed'+msg, {
-        title: 'succeed new/update rss',
-        variant: 'success',
-        solid: true
-      })
+      this.$bvToast.toast("succeed" + msg, {
+        title: "succeed new/update rss",
+        variant: "success",
+        solid: true,
+      });
     },
     getImageOption(value) {
       for (let index = 0; index < this.imageOptions.length; index++) {
@@ -391,8 +391,8 @@ export default {
       this.form.taskForm = newTask;
     },
     showCreateTaskButton() {
-      return !this.$route.name==="feed-edit"
-    }
+      return !this.$route.name === "feed-edit";
+    },
   },
 };
 </script>

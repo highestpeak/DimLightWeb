@@ -151,7 +151,7 @@
 </template>
 
 <script>
-import {newTag, updateTag, delTag, getTags} from "@/util/request";
+import {newTag, updateTag, delTag, getTags} from "@/util/request/tagRequest";
 export default {
   name: "feed-tag",
   data() {

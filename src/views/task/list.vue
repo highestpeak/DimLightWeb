@@ -22,44 +22,6 @@
     </b-button-group>
     <!-- button group -->
     <hr />
-    <!-- filter -->
-    <b-form-group
-      label="Filter"
-      label-for="filter-input"
-      label-cols-sm="3"
-      label-align-sm="right"
-      label-size="sm"
-    >
-      <b-input-group size="sm">
-        <b-form-input
-          id="filter-input"
-          v-model="filter"
-          type="search"
-          placeholder="Type to Search"
-        />
-        <b-input-group-append>
-          <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
-        </b-input-group-append>
-      </b-input-group>
-    </b-form-group>
-    <b-form-group
-      label="Filter On"
-      description="Leave all unchecked to filter on all data. Corn text is wating to do to filterable"
-      label-cols-sm="3"
-      label-align-sm="right"
-      label-size="sm"
-    >
-      <b-form-checkbox-group v-model="filterCols" class="mt-1">
-        <b-form-checkbox
-          v-for="(field, index) in fieldsCanFilter"
-          :key="index"
-          :value="field"
-        >
-          {{ field }}
-        </b-form-checkbox>
-      </b-form-checkbox-group>
-    </b-form-group>
-    <!-- filter -->
 
     <!--per page-->
     <b-form-group
@@ -93,9 +55,6 @@
       hover
       responsive
       small
-      :filter="filter"
-      :filter-included-fields="filterCols"
-      @filtered="onFiltered"
       :busy="isBusy"
       :items="items"
       :fields="fields"
@@ -163,27 +122,14 @@
 import { 
   // getTaskList,
   getTask , delTask, allRssTaskFetchNow
-} from "@/util/request";
+} from "@/util/request/taskRequest";
 export default {
   name: "",
   data() {
     return {
-      filter: null,
-      // filterCols 中的值是 fields 的 key
-      filterCols: [],
       pageOptions: [5, 20, 50, { value: 100, text: "Show a lot" }],
       perPage: 20,
       currentPage: 1,
-      // totalRows: 1,
-      fieldsCanFilter: [
-        "name",
-        "schedule",
-        "descUser",
-        "group",
-        "cacheCycle",
-        "autoDownload",
-        "nextEvent",
-      ],
       // table
       isBusy: false,
       fields: [
@@ -208,7 +154,7 @@ export default {
   mounted() {
     // Set the initial number of items
     this.isBusy = true
-    getTask(this.onTaskListFetchSucceed)
+    getTask(this.currentPage-1,this.perPage,this.onTaskListFetchSucceed)
     // this.items = getTaskList();
     // this.totalRows = this.items.length;
   },

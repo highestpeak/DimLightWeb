@@ -43,7 +43,7 @@ import NewTaskInputForm from "@/components/TaskNew/NewTaskInputForm";
 import SimpleRSSWatchTask from "@/components/TaskNew/SimpleRSSWatchTask";
 import { 
   newTask 
-} from "@/util/request";
+} from "@/util/request/taskRequest";
 export default {
   name: "",
   components: {
