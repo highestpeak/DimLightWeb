@@ -1,8 +1,87 @@
 <template>
   <div>
-    <h3>每日Feed获取量变化</h3>
-    <div id="oneFlightWeek" style="width:700px;height:200px;"></div>
-    统计平均内容长度，内容新鲜度，内容在所有feed的热度，内容数量，内容频率
+    <hr>
+    <h5 style="text-align:center;">每日Feed获取量变化</h5>
+    <div id="oneFlightWeek" style="width:700px;height:200px;margin:0 auto;"></div>
+    <b-card-group deck>
+      <b-card bg-variant="secondary" text-variant="white" header="平均内容长度" class="text-center">
+        <b-row>
+          <b-col style="margin: auto;">
+            <font-awesome-icon
+              :icon="['fas', 'ruler']"
+              size="3x"
+              style="color: #fff;"
+            />
+          </b-col>
+          <b-col style="font-size:50px">
+            1.5k
+          </b-col>
+        </b-row>
+      </b-card>
+
+      <b-card bg-variant="info" text-variant="white" header="内容新鲜度" class="text-center">
+        <b-row>
+          <b-col style="margin: auto;">
+            <font-awesome-icon
+              :icon="['fas', 'fan']"
+              size="3x"
+              style="color: #9ddfd3;"
+            />
+          </b-col>
+          <b-col style="font-size:50px">
+            85%
+          </b-col>
+        </b-row>
+      </b-card>
+
+      <b-card bg-variant="dark" header="内容在所有feed的热度" text-variant="white" class="text-center">
+        <b-row>
+          <b-col style="margin: auto;">
+            <font-awesome-icon
+              :icon="['fas', 'fire']"
+              size="3x"
+              style="color: #f21170;"
+            />
+          </b-col>
+          <b-col style="font-size:50px">
+            344
+          </b-col>
+        </b-row>
+      </b-card>
+
+    </b-card-group>
+    <b-card-group deck style="margin-top:10px">
+      <b-card bg-variant="secondary" text-variant="white" header="内容数量" class="text-center">
+        <b-row>
+          <b-col style="margin: auto;">
+            <font-awesome-icon
+              :icon="['fas', 'flag']"
+              size="3x"
+              style="color: #ce1f6a;"
+            />
+          </b-col>
+          <b-col style="font-size:50px">
+            67条
+          </b-col>
+        </b-row>
+      </b-card>
+
+      <b-card bg-variant="info" text-variant="white" header="内容频率" class="text-center">
+        <b-row>
+          <b-col style="margin: auto;">
+            <font-awesome-icon
+              :icon="['fas', 'wave-square']"
+              size="3x"
+              style="color: #000;"
+            />
+          </b-col>
+          <b-col style="font-size:50px">
+            20/天
+          </b-col>
+        </b-row>
+      </b-card>
+
+    </b-card-group>
   </div>
 </template>
 

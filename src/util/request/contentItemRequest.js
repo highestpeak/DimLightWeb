@@ -13,6 +13,8 @@ const getRssContentItemApi = '/api/rss/content_item/target_rss'
 const clearTargetRssContentItemApi = '/api/rss/content_item/del_target_rss'
 const fetchRssContentItemNowApi = '/api/process/fetch_rss_now'
 
+const getTopicContentItemApi = '/api/content_item/target_topic'
+
 function getContentItem(formDataSend, succeedCallback = null) {
   axios.get(getContentItemApi,{
     params: {
@@ -76,9 +78,36 @@ function fetchRssContentItemNow(rssId, succeedCallback=null) {
     });
 }
 
+/* topic */
+
+function getTopicContentItem(topicId, num, succeedCallback=null) {
+  axios.get(getTopicContentItemApi,{
+    params: {
+      topicId: topicId,
+      num: num,
+    }
+  })
+    .then(function (response) {
+      if (succeedCallback !== null) {
+        succeedCallback(response.data);
+      }
+    })
+    .catch(function (error) {
+    });
+}
+function clearTargetTopicContentItem(topicId, succeedCallback=null) {
+
+}
+function fetchTopicContentItemNow(topicId, succeedCallback=null) {
+
+}
+
 export {
   getContentItem,
   getRssContentItem,
   clearTargetRssContentItem,
   fetchRssContentItemNow,
+  getTopicContentItem,
+  clearTargetTopicContentItem,
+  fetchTopicContentItemNow,
 }

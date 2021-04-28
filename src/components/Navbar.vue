@@ -83,7 +83,7 @@ export default {
             // { to: "/feed/diagram", text: "View Diagram", active: false },
           ],
         },
-        { to: "/feed/topic", text: "Topic", active: false },
+        { to: "/topic/list", text: "Topic", active: false },
         {
           text: "Task",
           active: false,

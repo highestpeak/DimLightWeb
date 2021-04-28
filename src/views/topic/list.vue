@@ -69,7 +69,7 @@
       responsive
       small
       :busy="isBusy"
-      :items="items"
+      :items="itemsShowed"
       :fields="fields"
     >
       <template #table-busy>
@@ -77,6 +77,17 @@
           <b-spinner class="align-middle"></b-spinner>
           <strong>&nbsp;&nbsp;Loading...</strong>
         </div>
+      </template>
+
+      <template #cell(mobiusTags)="data">
+        <b-badge
+          v-for="(type, index) in data.value"
+          :key="index"
+          :variant="badgeVariantArray[index % badgeVariantArray.length]"
+          style="margin-right: 2px"
+        >
+          {{ type }}
+        </b-badge>
       </template>
 
       <template #cell(operate)="data">
@@ -101,7 +112,7 @@
       </template>
 
       <template #cell()="data">
-        <i>{{ data.value }}</i>
+        {{ data.value }}
       </template>
     </b-table>
 
@@ -167,8 +178,9 @@
 
 <script>
 import {newTopic, updateTopic, delTopic, getTopic, topicSearchContent} from "@/util/request/topicRequest";
+import {formatDate} from "@/util/commonUtils"
 export default {
-  name: "feed-topic",
+  name: "topic-list",
   data() {
     return {
       search: "",
@@ -212,18 +224,34 @@ export default {
       }
       var itemSample = this.items[0]
       var fieldList = []
+      var sourceNum = 0
       for (const itemKey in itemSample) {
-        if(itemKey==="updateTime"){
+        if(itemKey==="updateTime" || itemKey === "descUser" || itemKey === "jsonOptionalExtraFields" || itemKey === "rssSources"){
           continue
-        }
-        fieldList.push({
+        } else {
+          fieldList.push({
            key: itemKey, sortable: false
-        })
+          })
+        }
       }
 
+      fieldList.push({key: "sourceNum", sortable: true})
       fieldList.push( { key: "operate", sortable: false })
 
       return fieldList
+    },
+    itemsShowed: function () {
+      var itemsShowed = []
+      for (let index = 0; index < this.items.length; index++) {
+        const originItem = this.items[index];
+        var itemShowed = {}
+        for (const itemKey in originItem) {
+          itemShowed[itemKey] = originItem[itemKey]
+        }
+        itemShowed["sourceNum"] = originItem["rssSources"].length
+        itemsShowed.push(itemShowed)
+      }
+      return itemsShowed
     }
   },
   mounted(){
@@ -280,8 +308,9 @@ export default {
       // console.log(responseData)
       var topicList = responseData.content
       topicList.forEach(function(obj) {
-        delete obj.rssSources;
-        delete obj.rssContentItems;
+        // delete obj.rssSources;
+        // delete obj.rssContentItems;
+        obj.createTime = formatDate(obj.createTime)
       });
       this.items = topicList
       this.isBusy = false
@@ -311,7 +340,16 @@ export default {
       this.$refs['edit-topic-modal'].toggle('#toggle-btn')
     },
     infoRow(data) {
-      console.log("info row not impl");
+      // console.log("info row not impl");
+      // console.log(data);
+      // var topicItem = data.item
+
+      var topic = data.item
+      var topicIndex = data.index
+      // console.log(rssSource)
+      // var vueApp = this
+      // console.log(topic);
+      this.$router.push({ name: 'topic-info', params: { topic: topic }})
     }
   },
 };

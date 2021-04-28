@@ -17,6 +17,11 @@
           </b-card-body>
         </b-col>
       </b-row>
+      <b-row v-if="extraInfo!==null" style="background-color:#999b84;color:#fff">
+        <b-col md="12">
+          {{extraInfo}}
+        </b-col>
+      </b-row>
     </b-card>
   </div>
 </template>
@@ -36,6 +41,9 @@ export default {
     itemDesc: {
       type: String,
       default: '这里是Item的描述'
+    },
+    extraInfo: {
+      default: null
     }
   }
 };

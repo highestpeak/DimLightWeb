@@ -20,6 +20,55 @@
       </b-button>
     </b-button-group>
     <b-form-input v-model="previewNum" placeholder="FetchNum" style="margin: 10px 0px;float:right;width:auto" type="number"></b-form-input>
+    
+    <hr>
+
+    <!-- button group -->
+    <b-button-group style="margin: 10px 0px" size="sm">
+      <b-button variant="outline-secondary" href="#" @click="fetchRssAbstract">
+        <font-awesome-icon
+          :icon="['fas', 'eraser']"
+          size="lg"
+          style="color: #000"
+        />
+        摘要生成
+      </b-button>
+      <b-button variant="outline-secondary" href="#" @click="fetchRssTitleWordSplit">
+        <font-awesome-icon
+          :icon="['fas', 'eraser']"
+          size="lg"
+          style="color: #000"
+        />
+        标题分词
+      </b-button>
+      <b-button variant="outline-secondary" href="#" @click="fecthRssContentWordSplit">
+        <font-awesome-icon
+          :icon="['fas', 'eraser']"
+          size="lg"
+          style="color: #000"
+        />
+        内容分词
+      </b-button>
+      <b-button variant="outline-secondary" href="#" @click="fetchHtmlTagRemove">
+        <font-awesome-icon
+          :icon="['fas', 'eraser']"
+          size="lg"
+          style="color: #000"
+        />
+        HTML标签去除
+      </b-button>
+      <b-button variant="outline-secondary" href="#" @click="fetchRegxFilter">
+        <font-awesome-icon
+          :icon="['fas', 'eraser']"
+          size="lg"
+          style="color: #000"
+        />
+        正则过滤
+      </b-button>
+    </b-button-group>
+
+    <hr>
+
     <!-- button group -->
     <b-overlay :show="isBusy" rounded="sm">
       <b-alert :show="itemTotalNum===0" variant="danger" style="margin:10px 0px;">当前没有Item</b-alert>
@@ -30,7 +79,8 @@
         :key="index" 
         :imgSrc = rss.image
         :itemTitle = item.titleParse
-        :itemDesc = item.descParse
+        :itemDesc = item.descParse 
+        :extraInfo = item.extraInfo
         style="margin:10px 0px;" 
         />
     </b-overlay>
@@ -40,6 +90,7 @@
 <script>
 import FeedItemCard from "@/components/FeedInfo/FeedItemCard";
 import { getRssContentItem,clearTargetRssContentItem,fetchRssContentItemNow } from "@/util/request/contentItemRequest";
+import { fetchRssAbstract,fetchRssTitleWordSplit,fecthRssContentWordSplit,fetchHtmlTagRemove,fetchRegxFilter } from "@/util/request/tmpProcessRequest";
 export default {
   name: "FeedItemPreview",
   components: {
@@ -55,6 +106,7 @@ export default {
       previewNum: 20,
       itemList: [],
       isBusy: false,
+      extraInfo: null
     }
   },
   computed: {
@@ -99,6 +151,69 @@ export default {
         })
         getRssContentItem(this.rss.id,this.previewNum, this.onListFetchSucceed);
       }
+    },
+    fetchRssAbstract() {
+      var vueApp = this
+      fetchRssAbstract(this.rss.id, function (responseData) {
+        console.log("fetchRssAbstract");
+        console.log(responseData);
+        vueApp.itemList = responseData.originContentItem
+        var summary = responseData.summary
+        for (let index = 0; index < vueApp.itemList.length; index++) {
+          const item = vueApp.itemList[index];
+          item["extraInfo"] = summary[item.id]
+        }
+      });
+    },
+    fetchRssTitleWordSplit() {
+      var vueApp = this
+      fetchRssTitleWordSplit(this.rss.id, function (responseData) {
+        console.log("fetchRssTitleWordSplit");
+        console.log(responseData);
+        vueApp.itemList = responseData.originContentItem
+        var wordSegment = responseData.wordSegment
+        for (let index = 0; index < vueApp.itemList.length; index++) {
+          const item = vueApp.itemList[index];
+          item["extraInfo"] = wordSegment[item.id]
+        }
+      });
+    },
+    fecthRssContentWordSplit() {
+      var vueApp = this
+      fecthRssContentWordSplit(this.rss.id, function (responseData) {
+        console.log("fecthRssContentWordSplit");
+        console.log(responseData);
+        vueApp.itemList = responseData.originContentItem
+        var wordSegment = responseData.wordSegment
+        for (let index = 0; index < vueApp.itemList.length; index++) {
+          const item = vueApp.itemList[index];
+          item["extraInfo"] = wordSegment[item.id]
+        }
+      });
+    },
+    fetchHtmlTagRemove() {
+      var vueApp = this
+      fetchHtmlTagRemove(this.rss.id, function (responseData) {
+        console.log("fetchHtmlTagRemove");
+        console.log(responseData);
+        vueApp.itemList = responseData.originContentItem
+        var descAfterTagRemove = responseData.descAfterTagRemove
+        for (let index = 0; index < vueApp.itemList.length; index++) {
+          const item = vueApp.itemList[index];
+          item["extraInfo"] = descAfterTagRemove[item.id]
+        }
+      });
+    },
+    fetchRegxFilter() {
+      var vueApp = this
+      fetchRegxFilter(this.rss.id, function (responseData) {
+        console.log("fetchRegxFilter");
+        console.log(responseData);
+        vueApp.itemList = responseData
+      });
+    },
+    getExtraInfo(itemId) {
+      return this.extraInfo[itemId]
     }
   }
 };

@@ -15,6 +15,22 @@ function randomHexColor() { //随机生成十六进制颜色
   return '#' + hex; //返回‘#’开头16进制颜色
 }
 
+function formatDate(dateStr) {
+    // var date = Date.parse("2021-04-27T04:37:39.526+00:00")
+    var date = new Date(Date.parse(dateStr));
+    var year = date.getFullYear(),
+        month = date.getMonth() + 1, // months are zero indexed
+        day = date.getDate(),
+        hour = date.getHours(),
+        minute = date.getMinutes(),
+        second = date.getSeconds();
+        // hourFormatted = hour % 12 || 12, // hour returned in 24 hour format
+        // minuteFormatted = minute < 10 ? "0" + minute : minute,
+        // morning = hour < 12 ? "am" : "pm";
+
+    return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second
+}
+
 export {
-  randomString, randomHexColor
+  randomString, randomHexColor, formatDate
 }

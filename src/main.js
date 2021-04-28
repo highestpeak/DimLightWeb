@@ -23,7 +23,6 @@ library.add(
 )
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.component('font-awesome-layers', FontAwesomeLayers)
-
 import echarts from "echarts";
 Vue.prototype.$echarts = echarts;
 

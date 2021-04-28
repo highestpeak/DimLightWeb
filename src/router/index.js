@@ -14,7 +14,6 @@ const routes = [
   { path: '/feed/info', name: 'feed-info', component: () => import('../views/feed/info.vue'), },
   { path: '/feed/new', name: 'feed-new', component: () => import('../views/feed/new.vue'), },
   { path: '/feed/edit', name: 'feed-edit', component: () => import('../components/FeedNew/NewFeedInputForm.vue'), },
-  { path: '/feed/topic', name: 'feed-topic', component: () => import('../views/topic.vue'), },
   { path: '/feed/tag', name: 'feed-tag', component: () => import('../views/feed/tag.vue'), },
   { path: '/feed/diagram', name: 'feed-diagram', component: () => import('../views/feed/diagram.vue'), },
   {
@@ -27,6 +26,8 @@ const routes = [
   { path: '/task/edit', name: 'task-edit', component: () => import('../views/task/new.vue'), },
   { path: '/task/scenario', name: "task-scenario", component: () => import('../views/task/scenario.vue') },
   { path: '/task/diagram', name: "task-diagram", component: () => import('../views/task/diagram.vue') },
+  { path: '/topic/list', name: 'topic-list', component: () => import('../views/topic/list.vue'), },
+  { path: '/topic/info', name: 'topic-info', component: () => import('../views/topic/info.vue'), },
   { path: '/event', name: "event", component: () => import('../views/Events.vue') },
   {
     path: '/about',

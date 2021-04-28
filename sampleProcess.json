@@ -1,0 +1,11 @@
+{
+  "process": [
+    "htmlTagRemoveProcess",
+    "regxFilterProcess",
+    "descWordSegmentProcess",
+    "titleWordSegmentProcess",
+    "simHashProcess",
+    "duplicateRemoveProcess",
+    "resortProcess"
+  ]
+}

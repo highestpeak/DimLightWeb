@@ -63,7 +63,7 @@ function updateRSSSource(formDataArgs, succeedCallback = null) {
   delete formDataSend.title
   formDataSend.descUser = formDataSend.desc
   delete formDataSend.desc
-  // formDataSend.jsonOptionalExtraFields = JSON.stringify(formDataSend.jsonOptionalExtraFields)
+  formDataSend.jsonOptionalExtraFields = JSON.stringify(formDataSend.jsonOptionalExtraFields)
 
   axios.put(updateRssApi, formDataSend)
 
